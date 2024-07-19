@@ -1,19 +1,12 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-
+  <head>
     <title>{% block head_title %}SaaS{% endblock head_title %}</title>
 
-</head>
+    {% include 'base/css.html' %}
+  </head>
 
-<body>
-
-    {% block content %}
-    replace me
-
-    {% endblock content %}
-
-</body>
-
+  <body>
+    {% include 'nav/navbar.html' %} {% block content %} {% endblock content %} {% include 'base/js.html' %}
+  </body>
 </html>
