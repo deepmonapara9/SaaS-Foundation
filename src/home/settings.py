@@ -155,24 +155,27 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = config('STATIC_URL', default='/static/')
-STATICFILES_BASE_DIR = Path(config('STATICFILES_BASE_DIR', default=BASE_DIR / "staticfiles"))
+STATIC_URL = "static/"
+STATICFILES_BASE_DIR = BASE_DIR / "staticfiles"
 STATICFILES_BASE_DIR.mkdir(exist_ok=True, parents=True)
 STATICFILES_VENDOR_DIR = STATICFILES_BASE_DIR / "vendors"
 
-# source for python manage.py collectstatic
+# source(s) for python manage.py collectstatic 
 STATICFILES_DIRS = [
-    STATICFILES_BASE_DIR,
+    STATICFILES_BASE_DIR
 ]
 
-# output for python manage.py collectstatic
+# output for python manage.py collectstatic 
 # local cdn
-STATIC_ROOT = Path(config('STATIC_ROOT', default=BASE_DIR / "local-cdn"))
+STATIC_ROOT = BASE_DIR / "local-cdn"
 # if not DEBUG:
 #     STATIC_ROOT = BASE_DIR / "prod-cdn"
 
 # this is for django version < 4.2
 # STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+print("STATICFILES_DIRS:", STATICFILES_DIRS)
+print("STATIC_ROOT:", STATIC_ROOT)
 
 STORAGES = {
     "staticfiles": {
