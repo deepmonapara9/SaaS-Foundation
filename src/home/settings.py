@@ -174,9 +174,6 @@ STATIC_ROOT = BASE_DIR / "local-cdn"
 # this is for django version < 4.2
 # STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
-print("STATICFILES_DIRS:", STATICFILES_DIRS)
-print("STATIC_ROOT:", STATIC_ROOT)
-
 STORAGES = {
     "staticfiles": {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
