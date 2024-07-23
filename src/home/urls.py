@@ -21,7 +21,7 @@ from .views import home_view, about_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", home_view), #index page -> root page
+    path("", home_view, name='home'), #index page -> root page
     path("about/", about_view),
     path("login/", auth_views.login_view),
     path("register/", auth_views.register_view),
