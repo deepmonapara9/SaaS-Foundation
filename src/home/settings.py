@@ -55,8 +55,9 @@ if DEBUG:
         "localhost",
     ]
 
-
 # Application definition
+
+SITE_ID = 2
 
 INSTALLED_APPS = [
     # django-apps
@@ -66,6 +67,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     # my-apps
     "commando",
     "visits",
@@ -74,10 +76,13 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    # 'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.github',
+    'allauth.socialaccount.providers.google',
     "widget_tweaks",
     "slippers",
 ]
+
+
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -166,7 +171,11 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Provider specific settings
-SOCIALACCOUNT_PROVIDERS = {}
+SOCIALACCOUNT_PROVIDERS = {
+    "github":{
+        "VERIFIED_EMAIL": True
+    }
+}
 
 
 # Internationalization
