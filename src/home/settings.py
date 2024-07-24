@@ -98,6 +98,15 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'home.urls'
 
+# Ensure that cookies are sent over HTTPS
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://saas-foundation-production-1faf.up.railway.app/',
+]
+
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
