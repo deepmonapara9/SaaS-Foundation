@@ -101,9 +101,12 @@ ROOT_URLCONF = 'home.urls'
 # Ensure that cookies are sent over HTTPS
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+CSRF_COOKIE_SAMESITE = 'None'  # Allow cookies to be sent in cross-origin requests
+SESSION_COOKIE_SAMESITE = 'None'
+
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://saas-foundation-production-1faf.up.railway.app/',
+    'https://saas-foundation-production-1faf.up.railway.app',
 ]
 
 
