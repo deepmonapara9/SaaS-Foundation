@@ -49,7 +49,7 @@ def pw_protected_view(request, *args, **kwargs):
 
 @login_required(login_url=LOGIN_URL)
 def user_only_view(request, *args, **kwargs):
-    # print(request.user.is_staff)
+    # print(request.user.is_staff
     return render(request, "protected/user-only.html")
 
 @staff_member_required(login_url=LOGIN_URL)
