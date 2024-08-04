@@ -9,12 +9,12 @@
 {% if perms.auth or owner %}
     {% if perms.auth.view_user or owner %}
         <div>
-            {% for instance in object_list %}
+            {% comment %} {% for instance in object_list %} {% endcomment %}
 
             {{ instance.first_name }} - {{ instance.last_name }}
             {{ instance.last_login }}
 
-            {% endfor %}
+            {% comment %} {% endfor %} {% endcomment %}
         </div>
         {% else %}
         <div>
