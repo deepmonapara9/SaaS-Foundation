@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import Group, Permission
 from django.conf import settings
 from django.db.models.signals import post_save
+import helpers.billing
 
 # Create your models here.
 
@@ -17,6 +18,10 @@ SUBSCRIPTION_PERMISSIONS = [
 
 
 class Subscription(models.Model):
+    """
+    Subscription Plan = Stripe Product
+    """
+
     name = models.CharField(max_length=120)
     active = models.BooleanField(default=True)
     groups = models.ManyToManyField(Group)  # one-to-one
@@ -27,12 +32,23 @@ class Subscription(models.Model):
             "codename__in": [x[0] for x in SUBSCRIPTION_PERMISSIONS],
         },
     )
+    stripe_id = models.CharField(max_length=120, null=True, blank=True)
 
     def __str__(self):
         return f"{self.name}"
 
     class Meta:
         permissions = SUBSCRIPTION_PERMISSIONS
+
+    def save(self, *args, **kwargs):
+        if not self.stripe_id:
+            stripe_id = helpers.billing.create_product(
+                name=self.name,
+                metadata={"subscription_plan_id": self.id},
+                raw=False,
+            )
+            self.stripe_id = stripe_id
+        super().save(*args, **kwargs)
 
 
 class UserSubscription(models.Model):
@@ -50,7 +66,7 @@ def user_sub_post_save(sender, instance, *args, **kwargs):
     groups_ids = []
     if subscription_obj is not None:
         groups = subscription_obj.groups.all()
-        groups_ids = groups.values_list('id', flat=True)
+        groups_ids = groups.values_list("id", flat=True)
     if not ALLOW_CUSTOM_GROUPS:
         user.groups.set(groups_ids)
     else:
