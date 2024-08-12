@@ -69,18 +69,18 @@ class SubscriptionPrice(models.Model):
 
     @property
     def stripe_currency(self):
-        return "INR"
+        return "usd"
 
     @property
     def stripe_price(self):
         """
-        remove decimal palces
+        remove decimal places
         """
-        return self.price * 100
+        return int(self.price * 100)
 
     @property
     def product_stripe_id(self):
-        if self.subscription:
+        if not self.subscription:
             return None
         return self.subscription.stripe_id
 
@@ -90,11 +90,11 @@ class SubscriptionPrice(models.Model):
                 currency=self.stripe_currency,
                 unit_amount=self.stripe_price,
                 interval=self.interval,
-                # recurring={"interval": self.interval},
                 product=self.product_stripe_id,
                 metadata={"subscription_plan_price_id": self.id},
                 raw=False,
             )
+            # print(f"Created Stripe Price ID: {stripe_id}")
             self.stripe_id = stripe_id
         super().save(*args, **kwargs)
 

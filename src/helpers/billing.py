@@ -34,14 +34,15 @@ def create_product(name="", metadata={}, raw=False):
 
 
 def create_price(
-    currency="inr",
-    unit_amount="9,999",
+    currency="usd",
+    unit_amount="9999",
     interval="month",
-    # recurring={"interval": "month"},
     product=None,
     metadata={},
     raw=False,
 ):
+    if product is None:
+        return None
     response = stripe.Price.create(
         currency=currency,
         unit_amount=unit_amount,
