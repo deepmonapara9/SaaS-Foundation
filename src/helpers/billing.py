@@ -11,6 +11,21 @@ if "sk_test" in STRIPE_SECRET_KEY and not DJANGO_DEBUG:
 stripe.api_key = STRIPE_SECRET_KEY
 
 
+def serialize_subscription_data(subscription_response):
+    current_period_start = date_utils.timestamp_as_datetime(
+        subscription_response.current_period_start
+    )
+    current_period_end = date_utils.timestamp_as_datetime(
+        subscription_response.current_period_end
+    )
+    status = subscription_response.status
+    return {
+        "current_period_start": current_period_start,
+        "current_period_end": current_period_end,
+        "status": status,
+    }
+
+
 def create_customer(name="", email="", metadata={}, raw=False):
     response = stripe.Customer.create(
         name=name,
@@ -74,17 +89,20 @@ def start_checkout_session(
         return response
     return response.url
 
+
 def get_checkout_session(stripe_id, raw=True):
     response = stripe.checkout.Session.retrieve(stripe_id)
     if raw:
         return response
     return response.url
 
+
 def get_subscription(stripe_id, raw=True):
     response = stripe.Subscription.retrieve(stripe_id)
     if raw:
         return response
-    return response.url
+    return serialize_subscription_data(response)
+
 
 def cancel_subscription(stripe_id, reason="", feedback="other", raw=True):
     response = stripe.Subscription.cancel(
@@ -92,11 +110,12 @@ def cancel_subscription(stripe_id, reason="", feedback="other", raw=True):
         cancellation_details={
             "comment": reason,
             "feedback": feedback,
-        }
-        )
+        },
+    )
     if raw:
         return response
     return response.url
+
 
 def get_checkout_customer_plan(session_id):
     checkout_r = get_checkout_session(session_id, raw=True)
@@ -106,13 +125,11 @@ def get_checkout_customer_plan(session_id):
     # current_period_end
     sub_r = get_subscription(sub_stripe_id, raw=True)
     sub_plan = sub_r.plan
-    current_period_start = date_utils.timestamp_as_datetime(sub_r.current_period_start)
-    current_period_end = date_utils.timestamp_as_datetime(sub_r.current_period_end)
+    subscription_data = serialize_subscription_data(sub_r)
     data = {
         "customer_id": customer_id,
         "plan_id": sub_plan.id,
         "sub_stripe_id": sub_stripe_id,
-        "current_period_start": current_period_start,
-        "current_period_end": current_period_end,
+        **subscription_data,
     }
     return data

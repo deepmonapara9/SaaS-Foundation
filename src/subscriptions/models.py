@@ -96,7 +96,7 @@ class SubscriptionPrice(models.Model):
 
     class Meta:
         ordering = ["subscription__order", "order", "featured", "-updated"]
-        
+
     def get_checkout_url(self):
         return reverse("sub-price-checkout", kwargs={"price_id": self.id})
 
@@ -156,6 +156,16 @@ class SubscriptionPrice(models.Model):
 
 
 class UserSubscription(models.Model):
+    class SubscriptionStatus(models.TextChoices):
+        ACTIVE = "active", "Active"
+        TRIALING = "trialing", "Trialing"
+        INCOMPLETE = "incomplete", "Incomplete"
+        INCOMPLETE_EXPIRED = "incomplete_expired", "Incomplete Expired"
+        PAST_DUE = "past_due", "Past Due"
+        CANCELED = "canceled", "Canceled"
+        UNPAID = "unpaid", "Unpaid"
+        PAUSED = "paused", "Paused"
+
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     subscription = models.ForeignKey(
         Subscription, on_delete=models.SET_NULL, null=True, blank=True
@@ -163,10 +173,19 @@ class UserSubscription(models.Model):
     stripe_id = models.CharField(max_length=120, null=True, blank=True)
     active = models.BooleanField(default=True)
     user_cancelled = models.BooleanField(default=False)
-    original_period_start = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
-    current_period_start = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
-    current_period_end = models.DateTimeField(auto_now=False, auto_now_add=False, blank=True, null=True)
-    
+    original_period_start = models.DateTimeField(
+        auto_now=False, auto_now_add=False, blank=True, null=True
+    )
+    current_period_start = models.DateTimeField(
+        auto_now=False, auto_now_add=False, blank=True, null=True
+    )
+    current_period_end = models.DateTimeField(
+        auto_now=False, auto_now_add=False, blank=True, null=True
+    )
+    status = models.CharField(
+        max_length=20, choices=SubscriptionStatus.choices, null=True, blank=True
+    )
+
     @property
     def billing_cycle_anchor(self):
         """
@@ -177,11 +196,9 @@ class UserSubscription(models.Model):
         if not self.current_period_end:
             return None
         return int(self.current_period_end.timestamp())
-    
+
     def save(self, *args, **kwargs):
-        if (self.original_period_start is None and
-            self.current_period_start is not None
-            ):
+        if self.original_period_start is None and self.current_period_start is not None:
             self.original_period_start = self.current_period_start
         super().save(*args, **kwargs)
 
