@@ -155,16 +155,18 @@ class SubscriptionPrice(models.Model):
             qs.update(featured=False)
 
 
+class SubscriptionStatus(models.TextChoices):
+    ACTIVE = "active", "Active"
+    TRIALING = "trialing", "Trialing"
+    INCOMPLETE = "incomplete", "Incomplete"
+    INCOMPLETE_EXPIRED = "incomplete_expired", "Incomplete Expired"
+    PAST_DUE = "past_due", "Past Due"
+    CANCELED = "canceled", "Canceled"
+    UNPAID = "unpaid", "Unpaid"
+    PAUSED = "paused", "Paused"
+
+
 class UserSubscription(models.Model):
-    class SubscriptionStatus(models.TextChoices):
-        ACTIVE = "active", "Active"
-        TRIALING = "trialing", "Trialing"
-        INCOMPLETE = "incomplete", "Incomplete"
-        INCOMPLETE_EXPIRED = "incomplete_expired", "Incomplete Expired"
-        PAST_DUE = "past_due", "Past Due"
-        CANCELED = "canceled", "Canceled"
-        UNPAID = "unpaid", "Unpaid"
-        PAUSED = "paused", "Paused"
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     subscription = models.ForeignKey(
@@ -173,6 +175,7 @@ class UserSubscription(models.Model):
     stripe_id = models.CharField(max_length=120, null=True, blank=True)
     active = models.BooleanField(default=True)
     user_cancelled = models.BooleanField(default=False)
+    cancel_at_period_end = models.BooleanField(default=False)
     original_period_start = models.DateTimeField(
         auto_now=False, auto_now_add=False, blank=True, null=True
     )
@@ -188,6 +191,13 @@ class UserSubscription(models.Model):
 
     def get_absolute_url(self):
         return reverse("user_subscription")
+
+    def get_cancel_url(self):
+        return reverse("user_subscription_cancel")
+
+    @property
+    def is_active_status(self):
+        return self.status in [SubscriptionStatus.ACTIVE, SubscriptionStatus.TRIALING]
 
     @property
     def plan_name(self):

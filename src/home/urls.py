@@ -47,6 +47,11 @@ urlpatterns = [
         subscriptions_views.user_subscription_view,
         name="user_subscription",
     ),
+    path(
+        "accounts/billing/cancel",
+        subscriptions_views.user_subscription_cancel_view,
+        name="user_subscription_cancel",
+    ),
     path("accounts/", include("allauth.urls")),
     path("profiles/", include("profiles.urls")),
     path("protected/", pw_protected_view),
