@@ -40,11 +40,11 @@ if all([ADMIN_USER_NAME, ADMIN_USER_EMAIL]):
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = config("DJANGO_SECRET_KEY", default='dev-secret-key')
+SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = str(os.environ.get("DJANGO_DEBUG")).lower() == "true" or False
-DEBUG = config("DJANGO_DEBUG", cast=bool)
+DEBUG = config("DJANGO_DEBUG", cast=bool, default=False)
 
 BASE_URL = config("BASE_URL", default=None)
 # change base url in your .env file while putting in the prod
