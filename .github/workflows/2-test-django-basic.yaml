@@ -7,7 +7,7 @@ on:
       - main #trigger on main branch
 
 jobs:
-  hello:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
