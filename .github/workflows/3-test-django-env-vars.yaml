@@ -2,34 +2,35 @@ name: 3 - Test Django Env Vars
 
 on:
   workflow_dispatch:
-  # push:
-  #   branches:
-  #     - main
 
 jobs:
   test:
     runs-on: ubuntu-latest
     env:
       DJANGO_DEBUG: 0
-      # DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12' 
-      - name: Setup Django Secret Key
+          python-version: '3.12'
+
+      - name: Generate and Set Django Secret Key
+        id: set_secret_key
         run: |
           MY_GEN_KEY=$(openssl rand -base64 32)
           echo "DJANGO_SECRET_KEY=$MY_GEN_KEY" >> $GITHUB_ENV
+
       - name: Install Requirements
         run: |
           python -m pip install pip --upgrade
           python -m pip install -r requirements.txt
+
       - name: Django Tests
         working-directory: ./src
         env:
-          DJANGO_SECRET_KEY: ${{ env.DJANGO_SECRET_KEY }}  # This ensures the secret key is available in this step
+          DJANGO_SECRET_KEY: ${{ env.DJANGO_SECRET_KEY }}  # Ensures the secret key is available here
         run: |
           python manage.py test
