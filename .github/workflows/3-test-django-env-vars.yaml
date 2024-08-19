@@ -6,8 +6,8 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    env:
-      DJANGO_DEBUG: 0
+    # env:
+    #   DJANGO_DEBUG: 0
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -28,12 +28,13 @@ jobs:
           python -m pip install pip --upgrade
           python -m pip install -r requirements.txt
 
-      - name: Print Django Secret Key  # Added this step
-        run: echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY"
+      # - name: Print Django Secret Key  # Added this step
+      #   run: echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY"
 
       - name: Django Tests
         working-directory: ./src
         env:
-          DJANGO_SECRET_KEY: ${{ env.DJANGO_SECRET_KEY }}  # Ensures the secret key is available here
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DJANGO_DEBUG: 0
         run: |
           python manage.py test
