@@ -15,7 +15,7 @@ jobs:
           python-version: '3.12'
       - name: Setup Django Secret Key
         run: |
-          MY_GEN_KEY=$(openssl rand -base64 32)
+          MY_GEN_KEY='django-insecure-_n6s!a4t+2#f$ui(=hpewo%s0)ggt2bz%c_%h*e0wj8#)er0v4'
           echo "DJANGO_SECRET_KEY=$MY_GEN_KEY" >> $GITHUB_ENV
       - name: Print $GITHUB_ENV contents
         run: |
