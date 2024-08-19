@@ -28,6 +28,9 @@ jobs:
           python -m pip install pip --upgrade
           python -m pip install -r requirements.txt
 
+      - name: Print Django Secret Key  # Added this step
+        run: echo "DJANGO_SECRET_KEY=$DJANGO_SECRET_KEY"
+
       - name: Django Tests
         working-directory: ./src
         env:
