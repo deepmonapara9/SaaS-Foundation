@@ -7,13 +7,12 @@ from django.http import HttpResponse
 User = get_user_model()
 # Create your views here.
 
+
 @login_required
 def profile_list_view(request, *args, **kwargs):
-    
-    context = {
-        "object_list": User.objects.filter(is_active=True)
-    }
-    return render(request, 'profiles/list.html', context)
+
+    context = {"object_list": User.objects.filter(is_active=True)}
+    return render(request, "profiles/list.html", context)
 
 
 @login_required
@@ -23,7 +22,7 @@ def profile_detail_view(request, username=None, *args, **kwargs):
         user.has_perm("subscriptions.basic"),
         user.has_perm("subscriptions.basic_ai"),
         user.has_perm("subscriptions.pro"),
-        user.has_perm("subscriptions.advanced")
+        user.has_perm("subscriptions.advanced"),
     )
     # user_groups = user.groups.all()
     # print("user_groups", user_groups)
@@ -36,4 +35,4 @@ def profile_detail_view(request, username=None, *args, **kwargs):
         "instance": profile_user_obj,
         "owner": is_me,
     }
-    return render(request, 'profiles/detail.html', context)
+    return render(request, "profiles/detail.html", context)

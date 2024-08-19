@@ -31,7 +31,9 @@ from checkouts import views as checkout_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", landing_views.landing_dashboard_page_view, name='home'),  # index page -> root page
+    path(
+        "", landing_views.landing_dashboard_page_view, name="home"
+    ),  # index page -> root page
     path("about/", about_view),
     path("login/", auth_views.login_view),
     path("register/", auth_views.register_view),
