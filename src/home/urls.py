@@ -18,6 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from auth import views as auth_views
+from landing import views as landing_views
 from subscriptions import views as subscriptions_views
 from .views import (
     home_view,
@@ -30,7 +31,7 @@ from checkouts import views as checkout_views
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", home_view, name="home"),  # index page -> root page
+    path("", landing_views.landing_page_view, name="home"),  # index page -> root page
     path("about/", about_view),
     path("login/", auth_views.login_view),
     path("register/", auth_views.register_view),
