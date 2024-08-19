@@ -7,25 +7,23 @@ from django.db.models import Q
 def refresh_active_users_subscriptions(
     user_ids=None,
     active_only=True,
+    days_left=-1,
+    days_ago=-1,
+    day_start=-1,
+    day_end=-1,
     verbose=False,
-    days_ago=0,
-    days_left=0,
-    day_start=0,
-    day_end=0,
 ):
     qs = UserSubscription.objects.all()
     if active_only:
         qs = qs.by_active_trailing()
     if user_ids is not None:
         qs = qs.by_user_ids(user_ids=user_ids)
-    if days_ago > 0:
+    if days_ago > -1:
         qs = qs.by_days_ago(days_ago=days_ago)
-    if days_left > 0:
+    if days_left > -1:
         qs = qs.by_days_left(days_left=days_left)
-    if day_start > 0:
-        qs = qs.by_days_left(day_start=day_start)
-    if day_end > 0:
-        qs = qs.by_days_left(day_end=day_end)
+    if day_start > -1 and day_end > -1:
+        qs = qs.by_range(days_start=day_start, days_end=day_end, verbose=verbose)
     complete_count = 0
     qs_count = qs.count()
     for obj in qs:
