@@ -17,9 +17,6 @@ jobs:
         run: |
           MY_GEN_KEY='django-insecure-_n6s!a4t+2#f$ui(=hpewo%s0)ggt2bz%c_%h*e0wj8#)er0v4'
           echo "DJANGO_SECRET_KEY=$MY_GEN_KEY" >> $GITHUB_ENV
-      - name: Print $GITHUB_ENV contents
-        run: |
-          cat $GITHUB_ENV
       - name: Install Requirements
         run: |
           python -m pip install pip --upgrade
@@ -28,6 +25,3 @@ jobs:
         working-directory: ./src
         run: |
           python manage.py test
-      - name: Print Django settings (Optional)
-        run: |
-          python manage.py dumpsettings
