@@ -70,6 +70,10 @@ python -c 'import secrets; print(secrets.token_urlsafe(64))'
 
 Once you have this value, add update `DJANGO_SECRET_KEY` in `.env`.
 
+
+### Create [Neon](https://kirr.co/eu0b31) Postgres Database
+
+
 #### Install Neon CLI
 Using the [Neon cli](https://neon.tech/docs/reference/cli-install) via [homebrew](https://brew.sh/):
 
